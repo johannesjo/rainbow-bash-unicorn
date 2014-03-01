@@ -18,60 +18,50 @@ fi
 if tput setaf 1 &> /dev/null; then
     tput sgr0
     if [[ $(tput colors) -ge 256 ]] 2>/dev/null; then
-        MAGENTA=$(tput setaf 9)
-        ORANGE=$(tput setaf 172)
-        GREEN=$(tput setaf 190)
-        PURPLE=$(tput setaf 141)
-        WHITE=$(tput setaf 0)
         RED=$(tput setaf 160)
-        # RAINBOWWW
-
-        HAPPYVIOLET=$(tput setaf 201)
-        HAPPYBLUE=$(tput setaf 110)
-        HAPPYGREEN=$(tput setaf 82)
-        HAPPYYELLOW=$(tput setaf 226)
-        HAPPYORANGE=$(tput setaf 202)
-
-
+        WHITE=$(tput setaf 0)
+        VIOLETT=$(tput setaf 201)
+        CYAN=$(tput setaf 110)
+        GREEN=$(tput setaf 82)
+        YELLOW=$(tput setaf 226)
+        ORANGE=$(tput setaf 172)
     else
         RED=$(tput setaf 1)
+        WHITE=$(tput setaf 7)
+        VIOLETT=$(tput setaf 5)
+        CYAN=$(tput setaf 6)
         GREEN=$(tput setaf 2)
         YELLOW=$(tput setaf 3)
-        BLUE=$(tput setaf 4)
-        MAGENTA=$(tput setaf 5)
-        CYAN=$(tput setaf 6)
-        WHITE=$(tput setaf 7)
-
-        HAPPYVIOLET=MAGENTA
-        HAPPYBLUE=CYAN
-        HAPPYGREEN=GREEN
-        HAPPYYELLOW=YELLOW
-        HAPPYORANGE=RED
+        ORANGE=$WHITE
     fi
     BOLD=$(tput bold)
     RESET=$(tput sgr0)
+
 else
-    MAGENTA="\033[1;31m"
-    ORANGE="\033[1;33m"
-    GREEN="\033[1;32m"
-    PURPLE="\033[1;35m"
-    WHITE="\033[1;37m"
     RED="\033[0;31m"
+    WHITE="\033[1;37m"
+    VIOLETT="\033[1;35m"
+    CYAN="\033[1;36m"
+    GREEN="\033[1;32m"
+    ORANGE="\033[1;33m"
+
     BOLD=""
     RESET="\033[m"
-
-    HAPPYVIOLET=MAGENTA
-    HAPPYBLUE=ORANGE
-    HAPPYGREEN=GREEN
-    HAPPYYELLOW=PURPLE
-    HAPPYORANGE=WHITE
 fi
 
-export MAGENTA
-export ORANGE
-export GREEN
-export PURPLE
-export WHITE
+PREP_COLOR=$WHITE
+USER_COLOR=$VIOLETT
+LOC_COLOR=$CYAN
+FOLDER_COLOR=$GREEN
+BRANCH_COLOR=$YELLOW
+FILES_COUNT_COLOR=$ORANGE
+
+export PREP_COLOR
+export USER_COLOR
+export LOC_COLOR
+export FOLDER_COLOR
+export BRANCH_COLOR
+export FILES_COUNT_COLOR
 export BOLD
 export RESET
 
@@ -89,14 +79,10 @@ function get_file_count () {
 }
 
 if [[ $EUID -eq 0 ]]; then
-    # Sexy Bash Prompt for admin
-    # @gf3’s Sexy Bash Prompt, inspired by “Extravagant Zsh Prompt”
-    # Shamelessly copied from https://github.com/gf3/dotfiles
-    # Screenshot: http://i.imgur.com/s0Blh.png
-    export PS1="\[${BOLD}${MAGENTA}\]\u \[$WHITE\]at \[$ORANGE\]\h \[$WHITE\]in \[$GREEN\]\w\[$WHITE\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch)\[$WHITE\] (\$(get_file_count) files)\n\$ \[$RESET\]"
+    export PS1="\[${BOLD}${USER_COLOR}\]\u \[$PREP_COLOR\]at \[$LOC_COLOR\]\h \[$PREP_COLOR\]in \[$FOLDER_COLOR\]\w\[$PREP_COLOR\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$BRANCH_COLOR\]\$(parse_git_branch)\[$FILES_COUNT_COLOR\] (\$(get_file_count) files)\n\$ \[$RESET\]"
 else
     # rainbow theme for awesome users
-    export PS1="$(date +"%H:%M") \[${BOLD}${HAPPYVIOLET}\]\u \[$WHITE\]at \[$HAPPYBLUE\]\h \[$WHITE\]in \[$HAPPYGREEN\]\w\[$WHITE\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$HAPPYYELLOW\]\$(parse_git_branch)\[$HAPPYORANGE\] (\$(get_file_count) files)\n\$ \[$RESET\]"
+    export PS1="$(date +"%H:%M") \[${BOLD}${USER_COLOR}\]\u \[$PREP_COLOR\]at \[$LOC_COLOR\]\h \[$PREP_COLOR\]in \[$FOLDER_COLOR\]\w\[$PREP_COLOR\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$BRANCH_COLOR\]\$(parse_git_branch)\[$FILES_COUNT_COLOR\] (\$(get_file_count) files)\n\$ \[$RESET\]"
 fi
 
 export PS2="\[$ORANGE\]→ \[$RESET\]"
